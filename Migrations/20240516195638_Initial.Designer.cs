@@ -12,7 +12,7 @@ using short_url.Helpers;
 namespace short_url.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240516112651_Initial")]
+    [Migration("20240516195638_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
