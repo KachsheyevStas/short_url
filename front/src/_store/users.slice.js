@@ -56,7 +56,7 @@ function createExtraActions() {
             async (id) => await fetchWrapper.get(`${baseUrl}/${id}`)
         );
     }
-
+    
     function update() {
         return createAsyncThunk(
             `${name}/update`,

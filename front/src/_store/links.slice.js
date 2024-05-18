@@ -32,8 +32,9 @@ function createExtraActions() {
         getAll: getAll(),
         getById: getById(),
         update: update(),
-        delete: _delete()
+        delete: _delete(),
     };
+
 
     function addNewLink() {
         return createAsyncThunk(

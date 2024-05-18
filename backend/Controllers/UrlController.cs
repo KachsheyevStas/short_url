@@ -30,7 +30,7 @@ public class UrlsController : ControllerBase
         {
             if (!Uri.TryCreate(originalUrl, UriKind.Absolute, out var inputUri))
             {
-                return BadRequest(new { message = "URL is invalid" });
+                throw new AppException("URL is invalid");
             }
 
             var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
@@ -64,9 +64,9 @@ public class UrlsController : ControllerBase
     }
 
     [HttpPost("getByShortUrl")]
-    public IActionResult GetByShortUrl([FromBody] Guid id)
+    public IActionResult GetByShortUrl([FromBody] string shortUrl)
     {
-        var url = _urlShortService.GetOriginalUrl(id);
+        var url = _urlShortService.GetOriginalUrl(shortUrl);
         return Ok(url);
     }
 

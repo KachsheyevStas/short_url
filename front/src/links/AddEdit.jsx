@@ -38,8 +38,14 @@ function AddEdit() {
         }
     }, []);
 
-    function onSubmit({originalUrl}) {
-        return dispatch(linkActions.addNewLink({originalUrl}));
+    async function onSubmit({originalUrl}) {
+        dispatch(alertActions.clear());
+        try {
+            await dispatch(linkActions.addNewLink({originalUrl}));
+            history.navigate('/links');
+        } catch (error) {
+            dispatch(alertActions.error(error));
+        }
     }
 
     return (

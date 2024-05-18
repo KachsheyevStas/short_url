@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using short_url.Authorization;
 using short_url.Entities;
 using short_url.Helpers;
@@ -13,8 +14,9 @@ public interface IUrlShortenerService
     void Create(string originalUrl, Guid userId, string scheme, HostString host);
     IEnumerable<UrlMapping> GetAll(Guid userId);
     UrlMapping GetById(Guid id);
-    string GetOriginalUrl(Guid id);
+    string GetOriginalUrl(string shortUrl);
     void Delete(Guid id);
+    Task<string> GetDestinationUrlAsync(string shortCode, CancellationToken cancellationToken);
 }
 
 public class UrlShortenerService : IUrlShortenerService
@@ -47,9 +49,9 @@ public class UrlShortenerService : IUrlShortenerService
     }
 
     public UrlMapping? GetById(Guid id) => _context.UrlMappings.FirstOrDefault(t => t.Id == id);
-    public string? GetOriginalUrl(Guid id)
+    public string? GetOriginalUrl(string shortUrl)
     {
-        var mapping = _context.UrlMappings.FirstOrDefault(x => x.Id == id);
+        var mapping = _context.UrlMappings.FirstOrDefault(x => x.ShortUrl == shortUrl);
         if (mapping != null)
         {
             mapping.CountClick += 1;
@@ -65,9 +67,24 @@ public class UrlShortenerService : IUrlShortenerService
         _context.UrlMappings.Remove(url);
         _context.SaveChanges();
     }
+
+    public async Task<string> GetDestinationUrlAsync(string shortCode, CancellationToken cancellationToken)
+    {
+        var link = await _context.UrlMappings.FirstOrDefaultAsync(x => x.ShortUrl == shortCode, cancellationToken);
+
+        if (link is not null)
+        {
+            link.CountClick += 1;
+            _context.SaveChanges();
+            return link.OriginalUrl;
+        }
+
+        throw new Exception("Invalid shorten code!");
+    }
     private string GenerateShortCode(Guid id, string scheme, HostString host)
     {
         var urlChunk = WebEncoders.Base64UrlEncode(id.ToByteArray());
-        return $"{scheme}://{host}/{urlChunk}";
+        return urlChunk;
+        //return $"{scheme}://{host}/{urlChunk}";
     }
 }

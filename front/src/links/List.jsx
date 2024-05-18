@@ -1,18 +1,19 @@
-import { useEffect } from 'react';
+import { useEffect  } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { linkActions } from '_store';
-
 export { List };
 
 function List() {
     const links = useSelector(x => x.links.list);
     const dispatch = useDispatch();
+    const baseUrl = `${process.env.REACT_APP_API_URL}`
 
     useEffect(() => {
         dispatch(linkActions.getAll());
     }, []);
+
 
     return (
         <div>
@@ -33,8 +34,12 @@ function List() {
                         <tr key={link.id}>
                             <td>{link.originalUrl}</td>
                             <td>{link.createDate}</td>
-                            <td><Link to={`getById/${link.id}`}>{link.shortUrl}</Link></td>
+                            <td>
+                                <a  href={`${baseUrl}/${link.shortUrl}`} target="_blank">{`${baseUrl}/${link.shortUrl}`}</a>
+                             </td>
+
                             <td>{link.countClick}</td>
+                            
                             <td style={{ whiteSpace: 'nowrap' }}>
                                 <Link to={`edit/${link.id}`} className="btn btn-sm btn-primary me-1">Edit</Link>
                                 <button onClick={() => dispatch(linkActions.delete(link.id))} className="btn btn-sm btn-danger" style={{ width: '60px' }} disabled={link.isDeleting}>

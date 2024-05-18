@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Mvc;
 using short_url.Helpers;
 using short_url.Services;
 using short_url.Authorization;
@@ -52,8 +53,18 @@ if (app.Environment.IsDevelopment())
     app.UseMiddleware<ErrorHandlerMiddleware>();
     app.UseMiddleware<short_url.Authorization.JwtMiddleware>();
     app.UseHttpsRedirection();
-
+    app.UseRouting();
     app.MapControllers();
+    app.MapGet("/{short_code}", async (
+    [FromRoute(Name = "short_code")] string ShortCode,
+    IUrlShortenerService shortenService,
+    CancellationToken cancellationToken
+    ) =>
+    {
+        var destinationUrl = await shortenService.GetDestinationUrlAsync(ShortCode, cancellationToken);
+
+        return Results.Redirect(destinationUrl);
+    });
 }
 
 app.Run();
