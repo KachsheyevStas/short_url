@@ -31,10 +31,10 @@ function List() {
                 <tbody>
                     {links?.value?.map(link =>
                         <tr key={link.id}>
-                            <td>{link.OriginalUrl}</td>
-                            <td>{link.CreateDate}</td>
-                            <td>{link.ShortUrl}</td>
-                            <td>{link.CountClick}</td>
+                            <td>{link.originalUrl}</td>
+                            <td>{link.createDate}</td>
+                            <td><Link to={`getById/${link.id}`}>{link.shortUrl}</Link></td>
+                            <td>{link.countClick}</td>
                             <td style={{ whiteSpace: 'nowrap' }}>
                                 <Link to={`edit/${link.id}`} className="btn btn-sm btn-primary me-1">Edit</Link>
                                 <button onClick={() => dispatch(linkActions.delete(link.id))} className="btn btn-sm btn-danger" style={{ width: '60px' }} disabled={link.isDeleting}>

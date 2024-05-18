@@ -5,6 +5,8 @@ using short_url.Services;
 using short_url.Helpers;
 using System.Security.Claims;
 using short_url.Authorization;
+using Microsoft.AspNetCore.Http;
+using System.Net.Http;
 
 namespace short_url.Controllers;
 
@@ -26,10 +28,17 @@ public class UrlsController : ControllerBase
     {
         try
         {
+            if (!Uri.TryCreate(originalUrl, UriKind.Absolute, out var inputUri))
+            {
+                return BadRequest(new { message = "URL is invalid" });
+            }
+
             var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            var scheme = HttpContext.Request.Scheme;
+            var host = HttpContext.Request.Host;
             var userId = _jwtUtils.ValidateToken(token);
 
-            _urlShortService.Create(originalUrl, userId.Value);
+            _urlShortService.Create(originalUrl, userId.Value,  scheme, host);
             return Ok(new { message = "Link created" });
         }
         catch (AppException ex)
@@ -43,21 +52,21 @@ public class UrlsController : ControllerBase
     {
         var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
         var userId = _jwtUtils.ValidateToken(token);
-        var users = _urlShortService.GetAll(userId.Value);
-        return Ok(users);
+        var urls = _urlShortService.GetAll(userId.Value);
+        return Ok(urls);
     }
 
-    /*[HttpGet("{id}")]
+    [HttpGet("{id}")]
     public IActionResult GetById(Guid id)
     {
         var url = _urlShortService.GetById(id);
         return Ok(url);
-    }*/
+    }
 
-    [HttpGet("{shortUrl}")]
-    public IActionResult GetByShortUrl(string shortUrl)
+    [HttpPost("getByShortUrl")]
+    public IActionResult GetByShortUrl([FromBody] Guid id)
     {
-        var url = _urlShortService.GetOriginalUrl(shortUrl);
+        var url = _urlShortService.GetOriginalUrl(id);
         return Ok(url);
     }
 
