@@ -45,7 +45,7 @@ public class UrlShortenerService : IUrlShortenerService
     }
     public IEnumerable<UrlMapping> GetAll(Guid userId)
     {
-        return _context.UrlMappings;
+        return _context.UrlMappings.Where(t => t.UserId == userId);
     }
 
     public UrlMapping? GetById(Guid id) => _context.UrlMappings.FirstOrDefault(t => t.Id == id);

@@ -5,7 +5,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { history } from '_helpers';
 import { linkActions, alertActions } from '_store';
 
 export { AddEdit };
@@ -71,7 +70,7 @@ function AddEdit() {
                             Save
                         </button>
                         <button onClick={() => reset()} type="button" disabled={isSubmitting} className="btn btn-secondary">Reset</button>
-                        {title == 'Edit Link' && <Link to="/links" className="btn btn-link">Cancel</Link>}
+                        {title === 'Edit Link' && <Link to="/links" className="btn btn-link">Cancel</Link>}
                     </div>
                 </form>
             }

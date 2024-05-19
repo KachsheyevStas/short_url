@@ -67,4 +67,4 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.Run();
+app.Run("https://localhost:7090");
