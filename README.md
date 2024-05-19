@@ -5,12 +5,14 @@
 На фронте используется React.
 
 Запуск бэкенда - опционально
+
 `
 cd backend
 dotnet run
 `
 
 Запуск фронта - опционально
+
 `
 cd front
 npm install
