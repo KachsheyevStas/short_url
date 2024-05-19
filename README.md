@@ -19,5 +19,7 @@ npm install
 npm start
 
 После запуска бэкенд крутится на  https://localhost:7090
+
 Доступен просмотр методов контроллера с помощью Swagger: https://localhost:7090/swagger/index.html
+
 После запуска фронтенд крутится на  http://localhost:3000.
