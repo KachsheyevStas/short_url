@@ -4,11 +4,11 @@ import { history } from '_helpers';
 import { Nav, Alert, PrivateRoute } from '_components';
 import { Home } from 'home';
 import { AccountLayout } from 'account';
-import { UsersLayout } from 'users';
 import { LinksLayout } from 'links';
 
-export { App };
 
+
+export { App };
 function App() {
     // init custom history object to allow navigation from 
     // anywhere in the react app (inside or outside components)
@@ -24,7 +24,6 @@ function App() {
                     {/* private */}
                     <Route element={<PrivateRoute />}>
                         <Route path="/" element={<Home />} />
-                        <Route path="users/*" element={<UsersLayout />} />
                         <Route path="links/*" element={<LinksLayout />} />
                     </Route>
                     {/* public */}

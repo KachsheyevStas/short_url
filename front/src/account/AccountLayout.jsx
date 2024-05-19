@@ -8,7 +8,6 @@ export { AccountLayout };
 function AccountLayout() {
     const auth = useSelector(x => x.auth.value);
 
-    // redirect to home if already logged in
     if (auth) {
         return <Navigate to="/" />;
     }

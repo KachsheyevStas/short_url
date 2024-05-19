@@ -18,7 +18,12 @@ function AddEdit() {
 
     // form validation rules 
     const validationSchema = Yup.object().shape({
-        originalUrl: Yup.string().required('Original Url is required'),
+        originalUrl: Yup.string().required('Original Url is required')
+        .matches(
+            /((http|https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
+            'Enter correct url!'
+        )
+        .required('Please enter website'),
     });
     const formOptions = { resolver: yupResolver(validationSchema) };
 
@@ -34,7 +39,6 @@ function AddEdit() {
             dispatch(linkActions.getById(id)).unwrap()
                 .then(link => reset(link));
         } else {
-            setTitle('Add Link');
         }
     }, []);
 
@@ -42,7 +46,7 @@ function AddEdit() {
         dispatch(alertActions.clear());
         try {
             await dispatch(linkActions.addNewLink({originalUrl}));
-            history.navigate('/links');
+            await dispatch(linkActions.getAll());
         } catch (error) {
             dispatch(alertActions.error(error));
         }
