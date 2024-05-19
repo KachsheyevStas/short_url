@@ -8,6 +8,7 @@
 
 `
 cd backend
+
 dotnet run
 `
 
@@ -15,7 +16,9 @@ dotnet run
 
 `
 cd front
+
 npm install
+
 npm start
 `
 
